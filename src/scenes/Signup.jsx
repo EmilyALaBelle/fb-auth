@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { initializeApp } from "firebase/app"
-import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth"
+import { createUserWithEmailAndPassword, getAuth} from "firebase/auth"
 
 const firebaseConfig = {
     apiKey: "AIzaSyCBn2IAmey6kZyb-_khAuiV6dW5I3POl_Y",
@@ -11,43 +11,33 @@ const firebaseConfig = {
     appId: "1:256142708678:web:eca44052a9f92a128dacc7"
 };
 
-export default function Login({ setUser }) {
+export default function Signup({ setUser }) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const handleLogin = async (e) => {
+    const handleSignin = async (e) => {
         e.preventDefault()
         const app = initializeApp(firebaseConfig) //connects to firebase
         const auth = getAuth(app) //connects us to Firebase Auth
-        const response = await signInWithEmailAndPassword(auth, email, password)
+        const response = await createUserWithEmailAndPassword(auth, email, password)
             .catch(alert)
-        setUser(response.user)
-    }
-    const handleGoogleLogin = async () => {
-        const app = initializeApp(firebaseConfig) //connects to firebase
-        const auth = getAuth(app) //connects us to Firebase Auth
-        const provider = new GoogleAuthProvider()
-        const response = await signInWithPopup(auth, provider)
-        .catch(alert)
         setUser(response.user)
     }
     return (
         <>
-            <h1>Login</h1>
-            <form onSubmit={handleLogin}>
+            <h1>Signin</h1>
+            <form onSubmit={handleSignin}>
                 <label htmlFor="email">Email:{' '}
                     <input type="email" name="email" id=""
                         value={email} onChange={e => setEmail(e.target.value)}
-                        placeholder="yourname@domain.com" />
+                        placeHolder="yourname@domain.com" />
                 </label><br />
                 <label htmlFor="password">Password:{' '}
                     <input type="password" name="password"
                         value={password} onChange={e => setPassword(e.target.value)}
                         placeholder="....." />
                 </label><br />
-                <button type="submit">Login</button>
+                <button type="submit">Signin</button>
             </form>
-            <br />
-            <button onClick={handleGoogleLogin}>Sign in with Google</button>
         </>
     )
 }
